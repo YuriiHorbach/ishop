@@ -20,12 +20,76 @@ function catalog(){
 }
 /* ====Каталог - получение массива=== */
 
-/* ====pages=== */
- function pages(){
-     $query = "SELECT page_id, title, FROM pages ORDER BY position";
-     $res = mysql_query($query);
- }
-/* ====pages=== */
+/* ===Страницы=== */
+function pages(){
+    $query = "SELECT page_id, title FROM pages ORDER BY position";
+    $res = mysql_query($query);
+    
+    $pages = array();
+    while($row = mysql_fetch_assoc($res)){
+        $pages[] = $row;
+    }
+    return $pages;
+}
+/* ===Страницы=== */
+
+/* ===Отдельная страница=== */
+function get_page($page_id){
+    $query = "SELECT title, text FROM pages WHERE page_id = $page_id";
+    $res = mysql_query($query);
+    
+    $get_page = array();
+    $get_page = mysql_fetch_assoc($res);
+    return $get_page;
+}
+/* ===Отдельная страница=== */
+
+/* ===Названия новостей=== */
+function get_title_news(){
+    $query = "SELECT news_id, title, date FROM news ORDER BY news_id DESC LIMIT 2";
+    $res = mysql_query($query);
+    
+    $news = array();
+    while($row = mysql_fetch_assoc($res)){
+        $news[] = $row;
+    }
+    return $news;
+}
+/* ===Названия новостей=== */
+
+/* ===Отдельная новость=== */
+function get_news_text($news_id){
+    $query = "SELECT title, text, date FROM news WHERE news_id = $news_id";
+    $res = mysql_query($query);
+    
+    $news_text = array();
+    $news_text = mysql_fetch_assoc($res);
+    return $news_text;
+}
+/* ===Отдельная новость=== */
+
+/* ===Архив новостей=== */
+function get_all_news($start_pos, $perpage){
+    $query = "SELECT news_id, title, anons, date FROM news ORDER BY news_id DESC LIMIT $start_pos, $perpage";
+    $res = mysql_query($query);
+    
+    $all_news = array();
+    while($row = mysql_fetch_assoc($res)){
+        $all_news[] = $row;
+    }
+    return $all_news;
+}
+/* ===Архив новостей=== */
+
+/* ===Количество новостей=== */
+function count_news(){
+    $query = "SELECT COUNT(news_id) FROM news";
+    $res = mysql_query($query);
+    
+    $count_news = mysql_fetch_row($res);
+    return $count_news[0];
+}
+/* ===Количество новостей=== */
 
 /* ===Информеры - получение массива=== */
 function informer(){
@@ -47,6 +111,20 @@ function informer(){
     return $informers;
 }
 /* ===Информеры - получение массива=== */
+
+/* ===Получение текста информера=== */
+function get_text_informer($informer_id){
+    $query = "SELECT link_id, link_name, text, informers.informer_id, informers.informer_name
+                FROM links
+                    LEFT JOIN informers ON informers.informer_id = links.parent_informer
+                        WHERE link_id = $informer_id";
+    $res = mysql_query($query);
+    
+    $text_informer = array();
+    $text_informer = mysql_fetch_assoc($res);
+    return $text_informer;
+}
+/* ===Получение текста информера=== */
 
 /* ===Айстопперы - новинки, лидеры продаж, распродажа=== */
 function eyestopper($eyestopper){

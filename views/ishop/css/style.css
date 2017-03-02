@@ -352,7 +352,7 @@ body{
 			font-weight:bold; text-align:center;
 			}
 		.fmenu ul{
-			float:left; list-style:none; margin:15px;
+			float:left; list-style:none; margin:15px 15px 15px 40%;
 			}	
 			.fmenu ul li{
 				margin:0 0 5px 0;
@@ -362,7 +362,7 @@ body{
 				}
 			.fmenu ul a:hover{
 				color:rgba(255, 255, 255, 1); font-weight:bold; text-decoration:none;
-				}									
+				}																		
 
 /*		Табличный вид каталога		*/
 

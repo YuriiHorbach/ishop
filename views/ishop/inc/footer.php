@@ -15,13 +15,12 @@
 			<div class="fmenu">
 				<p>Меню:</p>
 				<ul>
-					<li><a href="#">Головна</a></li>
-					<li><a href="#">Про нас</a></li>
-					<li><a href="#">Оплата і доставка</a></li>
+					<li><a href="<?=PATH?>">Главная</a></li>
+                    <?php if($pages): ?>
+                        <?php foreach($pages as $item): ?>
+                            <li><a href="?view=page&amp;page_id=<?=$item['page_id']?>"><?=$item['title']?></a></li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 				</ul>	
-				<ul>
-					<li><a href="#">Покупка в кредит</a></li>
-					<li><a href="#">Контакти</a></li>
-				</ul>
 			</div>
 		</div>

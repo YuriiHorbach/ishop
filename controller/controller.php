@@ -16,8 +16,11 @@ $cat = catalog();
 // получение массива информеров
 $informers = informer();
 
-//pages
+// получени массива страниц
 $pages = pages();
+
+// получение названия новостей
+$news = get_title_news();
 
 // регистрация
 if($_POST['reg']){
@@ -63,6 +66,43 @@ switch($view){
     case('sale'):
         // распродажа
         $eyestoppers = eyestopper('sale');
+    break;
+    
+    case('page'):
+        // отдельная страница
+        $page_id = abs((int)$_GET['page_id']);
+        $get_page = get_page($page_id);
+    break;
+    
+    case('news'):
+        // отдельная новость
+        $news_id = abs((int)$_GET['news_id']);
+        $news_text = get_news_text($news_id);
+    break;
+    
+    case('archive'):
+        // все новости (архив новостей)
+        // параметры для навигации
+        $perpage = 2; // кол-во товаров на страницу
+        if(isset($_GET['page'])){
+            $page = (int)$_GET['page'];
+            if($page < 1) $page = 1;
+        }else{
+            $page = 1;
+        }
+        $count_rows = count_news(); // общее кол-во новостей
+        $pages_count = ceil($count_rows / $perpage); // кол-во страниц
+        if(!$pages_count) $pages_count = 1; // минимум 1 страница
+        if($page > $pages_count) $page = $pages_count; // если запрошенная страница больше максимума
+        $start_pos = ($page - 1) * $perpage; // начальная позиция для запроса
+        
+        $all_news = get_all_news($start_pos, $perpage);
+    break;
+    
+    case('informer'):
+        // текст информера
+        $informer_id = abs((int)$_GET['informer_id']);
+        $text_informer = get_text_informer($informer_id);
     break;
     
     case('cat'):
