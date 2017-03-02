@@ -35,7 +35,7 @@
 					выходные</p>
 				</div>
 				<div class="news">
-					<h3>Новости</h3>
+					<h3>Новини</h3>
                     <?php if($news): ?>
                         <?php foreach($news as $item): ?>
                             <p>
@@ -43,9 +43,9 @@
         					   <a href="?view=news&amp;news_id=<?=$item['news_id']?>"><?=$item['title']?></a>	
         					</p>   
                         <?php endforeach; ?>
-                        <a href="?view=archive" class="news-arh">Архив новостей</a>
+                        <a href="?view=archive" class="news-arh">Архів новин</a>
                     <?php else: ?>
-                        <p>Новостей пока нет.</p>
+                        <p>Новин немає.</p>
                     <?php endif; ?>
 				</div> <!-- .news -->
                 <!-- Информеры -->
