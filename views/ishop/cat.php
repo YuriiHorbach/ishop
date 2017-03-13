@@ -1,13 +1,16 @@
 <?php defined('ISHOP') or die('Access denied'); ?>
 <div class="catalog-index">
-    
     <div class="kroshka">
-		<a href="#">Накладки</a> / <a href="#">LG</a> / <span>Гладкі</span>
+<?php if(count($brand_name) > 1): // если подкатегория (слайдер, моноблок...) ?>
+    <a href="<?=PATH?>">Головна</a> / <a href="?view=cat&amp;category=<?=$brand_name[0]['brand_id']?>"><?=$brand_name[0]['brand_name']?></a> / <span><?=$brand_name[1]['brand_name']?></span>
+<?php elseif(count($brand_name) == 1): // если не дочерняя категория ?>
+    <a href="<?=PATH?>">Головна</a> / <span><?=$brand_name[0]['brand_name']?></span>
+<?php endif; ?>
 	</div> <!-- .kroshka -->
     <div class="vid-sort">
 		Вид: 
-			<a href="#" id="grid" class="grid_list"><img src="<?=TEMPLATE?>images/vid-tabl.gif" alt="табличный вид" /></a> 
-			<a href="#" id="list" class="grid_list"><img src="<?=TEMPLATE?>images/vid-line.gif" alt="линейный вид" /></a>  
+			<a href="#" id="grid" class="grid_list"><img src="<?=TEMPLATE?>images/vid-tabl.gif" alt="табличний вигляд" /></a> 
+			<a href="#" id="list" class="grid_list"><img src="<?=TEMPLATE?>images/vid-line.gif" alt="линійний вигляд" /></a>  
 			&nbsp;&nbsp;           
 		Сортувати по:&nbsp;   
             <a id="param_order" class="sort-top"><?=$order?></a>
@@ -28,13 +31,13 @@
 	<div class="product-table-img">
 		<a href="?view=product&amp;goods_id=<?=$product['goods_id']?>"><img src="<?=PRODUCTIMG?><?=$product['img']?>" alt="" width="64" /></a>
 		<div> <!-- Иконки -->
-            <?php if($product['hits']) echo '<img src="' .TEMPLATE. 'images/ico-cat-lider.png" alt="лидеры продаж" />'; ?>
+            <?php if($product['hits']) echo '<img src="' .TEMPLATE. 'images/ico-cat-lider.png" alt="лідери продажу" />'; ?>
             <?php if($product['new']) echo '<img src="' .TEMPLATE. 'images/ico-cat-new.png" alt="новинка" />'; ?>
-            <?php if($product['sale']) echo '<img src="' .TEMPLATE. 'images/ico-cat-sale.png" alt="распродажа" />'; ?>							
+            <?php if($product['sale']) echo '<img src="' .TEMPLATE. 'images/ico-cat-sale.png" alt="розпродаж" />'; ?>							
 		</div> <!-- Иконки -->
 	</div>
 	<p class="cat-table-more"><a href="?view=product&amp;goods_id=<?=$product['goods_id']?>">детальніше...</a></p>
-	<p>Цена :  <span><?=$product['price']?></span></p>
+	<p>Ціна :  <span><?=$product['price']?></span></p>
 	<a href="?view=addtocart&amp;goods_id=<?=$product['goods_id']?>"><img class="addtocard-index" src="<?=TEMPLATE?>images/addcard-table.jpg" alt="Добавить в корзину" /></a>
 </div> <!-- .product-table -->
 <!-- Табличный вид продуктов -->
@@ -45,12 +48,12 @@
 		<a href="?view=product&amp;goods_id=<?=$product['goods_id']?>"><img src="<?=PRODUCTIMG?><?=$product['img']?>" width="48" alt="" /></a>
 	</div>
 	<div class="product-line-price">
-		<p>Ціна :  <span><?=$product['price']?></span></p>
+		<p>Цена :  <span><?=$product['price']?></span></p>
 		<a href="?view=addtocart&amp;goods_id=<?=$product['goods_id']?>"><img class="addtocard-index" src="<?=TEMPLATE?>images/addcard-table.jpg" alt="Добавить в корзину" /></a>
 		<div> <!-- Иконки -->
-            <?php if($product['hits']) echo '<img src="' .TEMPLATE. 'images/ico-line-lider.jpg" alt="лидеры продаж" />'; ?>
+            <?php if($product['hits']) echo '<img src="' .TEMPLATE. 'images/ico-line-lider.jpg" alt="лідери продажу" />'; ?>
             <?php if($product['new']) echo '<img src="' .TEMPLATE. 'images/ico-line-new.jpg" alt="новинка" />'; ?>
-            <?php if($product['sale']) echo '<img src="' .TEMPLATE. 'images/ico-line-sale.jpg" alt="распродажа" />'; ?>							
+            <?php if($product['sale']) echo '<img src="' .TEMPLATE. 'images/ico-line-sale.jpg" alt="розпродаж" />'; ?>							
 		</div> <!-- Иконки -->
 		<p class="cat-line-more"><a href="?view=addtocart&amp;goods_id=<?=$product['goods_id']?>">детальніше...</a></p>
 	</div>	
@@ -65,7 +68,7 @@
 <div class="clr"></div>
 <?php if($pages_count > 1) pagination($page, $pages_count); ?>
 <?php else: ?>
-    <p>Товарів поки що немає!</p>
+    <p>Товарів немає!</p>
 <?php endif; ?>	
 <a name="nav"></a>			
 </div> <!-- .catalog-index -->

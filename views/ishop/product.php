@@ -1,9 +1,12 @@
 <?php defined('ISHOP') or die('Access denied'); ?>
 
-<?php if($goods): // если есть запрошенный товар ?>
-   
+<?php if($goods): // если есть запрошенный товар ?>  
 <div class="kroshka">
-	<a href="#">Накладки</a> / <a href="#">LG</a> / <span>Шипи</span>
+<?php if(count($brand_name) > 1): // если подкатегория (слайдер, моноблок...) ?>
+    <a href="<?=PATH?>">Головна</a> / <a href="?view=cat&amp;category=<?=$brand_name[0]['brand_id']?>"><?=$brand_name[0]['brand_name']?></a> / <a href="?view=cat&amp;category=<?=$brand_name[1]['brand_id']?>"><?=$brand_name[1]['brand_name']?></a> / <span><?=$goods['name']?></span>
+<?php elseif(count($brand_name) == 1): // если не дочерняя категория ?>
+    <a href="<?=PATH?>">Головна</a> / <a href="?view=cat&amp;category=<?=$brand_name[0]['brand_id']?>"><?=$brand_name[0]['brand_name']?></a> / <span><?=$goods['name']?></span>
+<?php endif; ?>
 </div> <!-- .kroshka -->
 
 <div class="catalog-detail">
@@ -39,5 +42,5 @@
 </div> <!-- .catalog-detail -->
 
 <?php else: ?>
-    <div class="error">Такого товаруа немає</div>
+    <div class="error">Такого товару немає</div>
 <?php endif; ?>

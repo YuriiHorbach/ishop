@@ -185,6 +185,23 @@ function products($category, $order_db, $start_pos, $perpage){
 }
 /* ===Получение массива товаров по категории=== */
 
+/* ===Получение названий для хлебных крох=== */
+function brand_name($category){
+    $query = "(SELECT brand_id, brand_name FROM brands
+                WHERE brand_id = 
+                    (SELECT parent_id FROM brands WHERE brand_id = $category)
+                )
+                UNION
+                    (SELECT brand_id, brand_name FROM brands WHERE brand_id = $category)";
+    $res = mysql_query($query);
+    $brand_name = array();
+    while($row = mysql_fetch_assoc($res)){
+        $brand_name[] = $row;
+    }
+    return $brand_name;
+}
+/* ===Получение названий для хлебных крох=== */
+
 /* ===Выбор по параметрам=== */
 function filter($category, $startprice, $endprice){
     $products = array();
@@ -216,10 +233,10 @@ function filter($category, $startprice, $endprice){
                 $products[] = $row;
             }
         }else{
-            $products['notfound'] = "<div class='error'>По указанным параметрам ничего не найдено</div>";
+            $products['notfound'] = "<div class='error'>По Вказаних параметрах ничого не знайдено</div>";
         }       
     }else{
-        $products['notfound'] = "<div class='error'>Вы не указали параметры подбора</div>";
+        $products['notfound'] = "<div class='error'>Ви не вказали параметри вибору</div>";
     }
     return $products;
 }
@@ -250,19 +267,19 @@ function total_sum($goods){
 function registration(){
     $error = ''; // флаг проверки пустых полей
     
-    $login = clear($_POST['login']);
+    $login = trim($_POST['login']);
     $pass = trim($_POST['pass']);
-    $name = clear($_POST['name']);
-    $email = clear($_POST['email']);
-    $phone = clear($_POST['phone']);
-    $address = clear($_POST['address']);
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone']);
+    $address = trim($_POST['address']);
     
-    if(empty($login)) $error .= '<li>Не указан логин</li>';
-    if(empty($pass)) $error .= '<li>Не указан пароль</li>';
-    if(empty($name)) $error .= '<li>Не указано ФИО</li>';
-    if(empty($email)) $error .= '<li>Не указан Email</li>';
-    if(empty($phone)) $error .= '<li>Не указан телефон</li>';
-    if(empty($address)) $error .= '<li>Не указан адрес</li>';
+    if(empty($login)) $error .= '<li>Не вказаний логін</li>';
+    if(empty($pass)) $error .= '<li>Не вказаний пароль</li>';
+    if(empty($name)) $error .= '<li>Не вказано ПІБ</li>';
+    if(empty($email)) $error .= '<li>Не вказаний Email</li>';
+    if(empty($phone)) $error .= '<li>Не вказаний телефон</li>';
+    if(empty($address)) $error .= '<li>Не вказана адреса</li>';
     
     if(empty($error)){
         // если все поля заполнены
@@ -272,28 +289,40 @@ function registration(){
         $row = mysql_num_rows($res); // 1 - такой юзер есть, 0 - нет
         if($row){
             // если такой логин уже есть
-            $_SESSION['reg']['res'] = "<div class='error'>Пользователь с таким логином уже зарегистрирован на сайте. Введите другой логин.</div>";
+            $_SESSION['reg']['res'] = "<div class='error'>Користувач з таким логіном вже зареєстрований на сайті. Введить інший логін.</div>";
             $_SESSION['reg']['name'] = $name;
             $_SESSION['reg']['email'] = $email;
             $_SESSION['reg']['phone'] = $phone;
             $_SESSION['reg']['addres'] = $address;
         }else{
             // если все ок - регистрируем
+                    $login = clear($_POST['login']);
+                    $name = clear($_POST['name']);
+                    $email = clear($_POST['email']);
+                    $phone = clear($_POST['phone']);
+                    $address = clear($_POST['address']);
             $pass = md5($pass);
             $query = "INSERT INTO customers (name, email, phone, address, login, password)
                         VALUES ('$name', '$email', '$phone', '$address', '$login', '$pass')";
             $res = mysql_query($query) or die(mysql_error());
             if(mysql_affected_rows() > 0){
                 // если запись добавлена
-                $_SESSION['reg']['res'] = "<div class='success'>Регистрация прошла успешно.</div>";
-                $_SESSION['auth']['user'] = $name;
+                $_SESSION['reg']['res'] = "<div class='success'>Реєстрація пройшла успішно.</div>";
+                $_SESSION['auth']['user'] = $_POST['name'];
                 $_SESSION['auth']['customer_id'] = mysql_insert_id();
                 $_SESSION['auth']['email'] = $email;
+            }else{
+                $_SESSION['reg']['res'] = "<div class='error'>Помилка!</div>";
+                $_SESSION['reg']['login'] = $login;
+                $_SESSION['reg']['name'] = $name;
+                $_SESSION['reg']['email'] = $email;
+                $_SESSION['reg']['phone'] = $phone;
+                $_SESSION['reg']['addres'] = $address;
             }
         }
     }else{
         // если не заполнены обязательные поля
-        $_SESSION['reg']['res'] = "<div class='error'>Не заполнены обязательные поля: <ul> $error </ul></div>";
+        $_SESSION['reg']['res'] = "<div class='error'>Не заповнені обов'язкові поля: <ul> $error </ul></div>";
         $_SESSION['reg']['login'] = $login;
         $_SESSION['reg']['name'] = $name;
         $_SESSION['reg']['email'] = $email;
@@ -310,7 +339,7 @@ function authorization(){
     
     if(empty($login) OR empty($pass)){
         // если пусты поля логин/пароль
-        $_SESSION['auth']['error'] = "Поля логин/пароль должны быть заполнены!";
+        $_SESSION['auth']['error'] = "Поля логін/пароль повинні бути заповнені!";
     }else{
         // если получены данные из полей логин/пароль
         $pass = md5($pass);
@@ -325,7 +354,7 @@ function authorization(){
             $_SESSION['auth']['email'] = $row[2];
         }else{
             // если неверен логин/пароль
-            $_SESSION['auth']['error'] = "Логин/пароль введены неверно!";
+            $_SESSION['auth']['error'] = "Логін/пароль введені невірно!";
         }
     }
 }
@@ -356,15 +385,15 @@ function add_order(){
     if(!$_SESSION['auth']['user']){
         $error = ''; // флаг проверки пустых полей
     
-        $name = clear($_POST['name']);
-        $email = clear($_POST['email']);
-        $phone = clear($_POST['phone']);
-        $address = clear($_POST['address']);
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phone']);
+        $address = trim($_POST['address']);
         
-        if(empty($name)) $error .= '<li>Не указано ФИО</li>';
-        if(empty($email)) $error .= '<li>Не указан Email</li>';
-        if(empty($phone)) $error .= '<li>Не указан телефон</li>';
-        if(empty($address)) $error .= '<li>Не указан адрес</li>';
+        if(empty($name)) $error .= '<li>Не вказано ПІБ</li>';
+        if(empty($email)) $error .= '<li>Не вказано Email</li>';
+        if(empty($phone)) $error .= '<li>Не вказано телефон</li>';
+        if(empty($address)) $error .= '<li>Не указана адреса</li>';
         
         if(empty($error)){
             // добавляем гостя в заказчики (но без данных авторизации)
@@ -372,12 +401,12 @@ function add_order(){
             if(!$customer_id) return false; // прекращаем выполнение в случае возникновения ошибки добавления гостя-заказчика
         }else{
             // если не заполнены обязательные поля
-            $_SESSION['order']['res'] = "<div class='error'>Не заполнены обязательные поля: <ul> $error </ul></div>";
+            $_SESSION['order']['res'] = "<div class='error'>Не заповнені обов'язкові поля: <ul> $error </ul></div>";
             $_SESSION['order']['name'] = $name;
             $_SESSION['order']['email'] = $email;
             $_SESSION['order']['phone'] = $phone;
             $_SESSION['order']['addres'] = $address;
-            $_SESSION['order']['prim'] = $address;
+            $_SESSION['order']['prim'] = $prim;
             return false;
         }
     }
@@ -388,6 +417,10 @@ function add_order(){
 
 /* ===Добавление заказчика-гостя=== */
 function add_customer($name, $email, $phone, $address){
+    $name = clear($_POST['name']);
+    $email = clear($_POST['email']);
+    $phone = clear($_POST['phone']);
+    $address = clear($_POST['address']);
     $query = "INSERT INTO customers (name, email, phone, address)
                 VALUES ('$name', '$email', '$phone', '$address')";
     $res = mysql_query($query);
@@ -396,7 +429,7 @@ function add_customer($name, $email, $phone, $address){
         return mysql_insert_id();
     }else{
         // если произошла ошибка при добавлении
-        $_SESSION['order']['res'] = "<div class='error'>Произошла ошибка при регистрации заказа</div>";
+        $_SESSION['order']['res'] = "<div class='error'>Виникла помилка при реєстрації замовлення</div>";
         $_SESSION['order']['name'] = $name;
         $_SESSION['order']['email'] = $email;
         $_SESSION['order']['phone'] = $phone;
@@ -409,6 +442,8 @@ function add_customer($name, $email, $phone, $address){
 
 /* ===Сохранение заказа=== */
 function save_order($customer_id, $dostavka_id, $prim){
+    $prim=  clear($prim);
+        
     $query = "INSERT INTO orders (`customer_id`, `date`, `dostavka_id`, `prim`)
                 VALUES ($customer_id, NOW(), $dostavka_id, '$prim')";
     mysql_query($query) or die(mysql_error());
@@ -444,7 +479,7 @@ function save_order($customer_id, $dostavka_id, $prim){
     unset($_SESSION['cart']);
     unset($_SESSION['total_sum']);
     unset($_SESSION['total_quantity']);
-    $_SESSION['order']['res'] = "<div class='success'>Спасибо за Ваш заказ. В ближайшее время с Вами свяжется менеджер для согласования заказа.</div>";
+    $_SESSION['order']['res'] = "<div class='success'>Дякуємо за Ваше замовлення. В найближчий час з Вами зв'яжеться менеджер для підтвердження замовлення.</div>";
     return true;
 }
 /* ===Сохранение заказа=== */
@@ -453,18 +488,18 @@ function save_order($customer_id, $dostavka_id, $prim){
 function mail_order($order_id, $email){
     //mail(to, subject, body, header);
     // тема письма
-    $subject = "Заказ в интернет-магазине";
+    $subject = "Замовлення в інтернет-магазині";
     // заголовки
     $headers .= "Content-type: text/plain; charset=utf-8\r\n";
     $headers .= "From: ISHOP";
     // тело письма
-    $mail_body = "Благодарим Вас за заказ!\r\nНомер Вашего заказа - {$order_id}
-    \r\n\r\nЗаказанные товары:\r\n";
+    $mail_body = "Дякуємо Вам за замовлення!\r\nНомер Вашого замовлення - {$order_id}
+    \r\n\r\nЗамовлеі товари:\r\n";
     // атрибуты товара
     foreach($_SESSION['cart'] as $goods_id => $value){
-        $mail_body .= "Наименование: {$value['name']}, Цена: {$value['price']}, Количество: {$value['qty']} шт.\r\n";
+        $mail_body .= "Найменування: {$value['name']}, Ціна: {$value['price']}, Кількість: {$value['qty']} шт.\r\n";
     }
-    $mail_body .= "\r\nИтого: {$_SESSION['total_quantity']} на сумму: {$_SESSION['total_sum']}";
+    $mail_body .= "\r\nВсього: {$_SESSION['total_quantity']} на суму: {$_SESSION['total_sum']}";
     
     // отправка писем
     mail($email, $subject, $mail_body, $headers);
@@ -478,7 +513,7 @@ function search(){
     $result_search = array(); //результат поиска
     
     if(mb_strlen($search, 'UTF-8') < 4){
-        $result_search['notfound'] = "<div class='error'>Поисковый запрос должен содержать не менее 4-х символов</div>";
+        $result_search['notfound'] = "<div class='error'>Пошуковий запит повинен містити не меньше 4-х символів</div>";
     }else{
         $query = "SELECT goods_id, name, img, price, hits, new, sale
                     FROM goods
@@ -490,7 +525,7 @@ function search(){
                 $result_search[] = $row_search;
             }
         }else{
-            $result_search['notfound'] = "<div class='error'>По Вашему запросу ничего не найдено</div>";
+            $result_search['notfound'] = "<div class='error'>За Вашим запитом нічого не знайдено</div>";
         }
     }
     

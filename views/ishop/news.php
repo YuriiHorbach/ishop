@@ -1,7 +1,7 @@
 <?php defined('ISHOP') or die('Access denied'); ?>
 
 <div class="kroshka">
-	<a href="#">Главная</a> / <a href="#">Способы оплаты</a> / <span>Наличный расчёт</span>
+	<a href="<?=PATH?>">Главная</a> / <span><?=$news_text['title']?></span>
 </div>
 
 <div class="content-txt">
@@ -11,6 +11,6 @@
         <br /><br />
         <?=$news_text['text']?>
     <?php else: ?>
-        <p>Такої новини немає</p>
+        <p>Такой новости нет!</p>
     <?php endif; ?>
 </div> <!-- .content-txt -->

@@ -41,43 +41,41 @@
 	</div>		
 	
 	
-	<h3>Информация для доставки:</h3>
+	<h3>Інформація для доставки:</h3>
 <?php if(!$_SESSION['auth']['user']): // проверка авторизации ?>	
 	<table class="zakaz-data" border="0" cellspacing="0" cellpadding="0">
 	  <tr class="notauth">
-		<td class="zakaz-txt">*ФИО</td>
-		<td class="zakaz-inpt"><input type="text" name="name" value="<?=$_SESSION['order']['name']?>" /></td>
-		<td class="zakaz-prim">Пример: Иванов Сергей Александрович</td>
+		<td class="zakaz-txt">*ПІБ</td>
+                <td class="zakaz-inpt"><input type="text" name="name" value="<?=htmlspecialchars($_SESSION['order']['name'])?>" /></td>
+		<td class="zakaz-prim">Приклад: Іванов Іван Іванович</td>
 	  </tr>
 	  <tr class="notauth">
-		<td class="zakaz-txt">*Е-маил</td>
-		<td class="zakaz-inpt"><input type="text" name="email" value="<?=$_SESSION['order']['email']?>" /></td>
-		<td class="zakaz-prim">Пример: test@mail.ru</td>
+		<td class="zakaz-txt">*Е-mail</td>
+		<td class="zakaz-inpt"><input type="text" name="email" value="<?=htmlspecialchars($_SESSION['order']['email'])?>" /></td>
+		<td class="zakaz-prim">Приклад: test@gmail.com</td>
 	  </tr>
 	  <tr class="notauth">
 		<td class="zakaz-txt">*Телефон</td>
-		<td class="zakaz-inpt"><input type="text" name="phone" value="<?=$_SESSION['order']['phone']?>" /></td>
-		<td class="zakaz-prim">Пример: 8 937 999 99 99</td>
+		<td class="zakaz-inpt"><input type="text" name="phone" value="<?=htmlspecialchars($_SESSION['order']['phone'])?>" /></td>
+		<td class="zakaz-prim">Приклад: 8 88 88 88 88 </td>
 	  </tr>
 	  <tr class="notauth">
-		<td class="zakaz-txt">*Адрес доставки</td>
-		<td class="zakaz-inpt"><input type="text" name="address" value="<?=$_SESSION['order']['addres']?>" /></td>
-		<td class="zakaz-prim">Пример: г. Москва, пр. Мира, ул. Петра Великого д.19, кв 51.</td>
+		<td class="zakaz-txt">*Адреса доставки</td>
+		<td class="zakaz-inpt"><input type="text" name="address" value="<?=htmlspecialchars($_SESSION['order']['addres'])?>" /></td>
+		<td class="zakaz-prim">Приклад: м. Наше місто , пр.Миру, ул. Лесі Українки б.15, кв. 12.</td>
 	  </tr>
 	  <tr>
-		<td class="zakaz-txt" style="vertical-align:top;">Примечание </td>
+		<td class="zakaz-txt" style="vertical-align:top;">Примітка </td>
 		<td class="zakaz-txtarea"><textarea name="prim"><?=$_SESSION['order']['prim']?></textarea></td>
-		<td class="zakaz-prim" style="vertical-align:top;">Пример: Позвоните пожалуйста после 10 вечера, 
-до этого времени я на работе </td>
+		<td class="zakaz-prim" style="vertical-align:top;">Приклад: Зателефонуйте завтра</td>
 	  </tr>
 	</table>
     <?php else: // если пользователь авторизован ?>
     <table class="zakaz-data" border="0" cellspacing="0" cellpadding="0">
         <tr>
-    		<td class="zakaz-txt" style="vertical-align:top;">Примечание </td>
+    		<td class="zakaz-txt" style="vertical-align:top;">Примітка </td>
     		<td class="zakaz-txtarea"><textarea name="prim"></textarea></td>
-    		<td class="zakaz-prim" style="vertical-align:top;">Пример: Позвоните пожалуйста после 10 вечера, 
-    до этого времени я на работе </td>
+    		<td class="zakaz-prim" style="vertical-align:top;">Приклад: Зателефонуйте завтра</td>
         </tr>
 	</table>
 <?php endif; // конец условия проверки авторизации ?>		
@@ -87,7 +85,7 @@
 	
 	</form>
     <?php else: // если товаров нет ?>
-        Корзина пуста
+        Кошик порожній
     <?php endif; // конец условия проверки корзины ?>
 <?php
 unset($_SESSION['order']);

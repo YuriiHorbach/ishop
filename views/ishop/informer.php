@@ -1,7 +1,6 @@
 <?php defined('ISHOP') or die('Access denied'); ?>
-
 <div class="kroshka">
-	<a href="#">Главная</a> / <a href="#">Способы оплаты</a> / <span>Наличный расчёт</span>
+	<a href="<?=PATH?>">Главная</a> / <span><?=$text_informer['informer_name']?></span> / <span><?=$text_informer['link_name']?></span>
 </div>
 
 <div class="content-txt">
@@ -9,6 +8,6 @@
         <h1><?=$text_informer['link_name']?></h1>
         <?=$text_informer['text']?>
     <?php else: ?>
-        <p>Такої сторінки немає!</p>
+        <p>Такой страницы нет!</p>
     <?php endif; ?>
 </div> <!-- .content-txt -->

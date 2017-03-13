@@ -33,7 +33,7 @@ if($_POST['auth']){
     authorization();
     if($_SESSION['auth']['user']){
         // если пользователь авторизовался
-        echo "<p>Добро пожаловать, {$_SESSION['auth']['user']}</p>";
+        echo "<p>Раді вітати, {$_SESSION['auth']['user']}</p>";
         exit;
     }else{
         // если авторизация неудачна
@@ -114,12 +114,12 @@ switch($view){
         // ключи - то, что передаем GET-параметром
         // значения - то, что показываем пользователю и часть SQL-запроса, который передаем в модель
         $order_p = array(
-                        'pricea' => array('от дешевых к дорогим', 'price ASC'),
-                        'priced' => array('от дорогих к дешевым', 'price DESC'),
-                        'datea' => array('по дате добавления - к последним', 'date ASC'),
-                        'dated' => array('по дате добавления - с последних', 'date DESC'),
-                        'namea' => array('от А до Я', 'name ASC'),
-                        'named' => array('от Я до А', 'name DESC')
+                        'pricea' => array('від дешевих до дорогих', 'price ASC'),
+                        'priced' => array('від дорогих до дешевих', 'price DESC'),
+                        'datea' => array('по дате додавання - до останніх', 'date ASC'),
+                        'dated' => array('по дате додавання - із останніх', 'date DESC'),
+                        'namea' => array('від А до Я', 'name ASC'),
+                        'named' => array('від Я до А', 'name DESC')
                         );
         $order_get = clear($_GET['order']); // получаем возможный параметр сортировки
         if(array_key_exists($order_get, $order_p)){
@@ -146,6 +146,7 @@ switch($view){
         if($page > $pages_count) $page = $pages_count; // если запрошенная страница больше максимума
         $start_pos = ($page - 1) * $perpage; // начальная позиция для запроса
         
+        $brand_name = brand_name($category); // хлебные крохи
         $products = products($category, $order_db, $start_pos, $perpage); // получаем массив из модели
     break;
     
@@ -242,6 +243,7 @@ switch($view){
         $goods_id = abs( (int)$_GET['goods_id'] );
         if($goods_id){
             $goods = get_goods($goods_id);
+            $brand_name = brand_name($goods['goods_brandid']); // хлебные крошки
         }
     break;
   
